@@ -1,6 +1,6 @@
 package com.example.gratitud_challenge.controller;
 
-import com.example.gratitud_challenge.dto.DatosCrearUsuario;
+import com.example.gratitud_challenge.dto.usuario.DatosCrearUsuario;
 import com.example.gratitud_challenge.service.UsuarioService;
 
 import jakarta.validation.Valid;

@@ -1,4 +1,4 @@
-package com.example.gratitud_challenge.dto;
+package com.example.gratitud_challenge.dto.usuario;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

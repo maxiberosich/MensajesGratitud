@@ -1,11 +1,10 @@
 package com.example.gratitud_challenge.model;
 
-import com.example.gratitud_challenge.dto.DatosCrearUsuario;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.gratitud_challenge.dto.usuario.DatosCrearUsuario;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -18,6 +17,14 @@ public class Usuario {
     private String nombreUsuario;
     private String password;
     private String email;
+
+    @OneToMany
+    private List<Mensaje> listaMensajes;
+
+    public Usuario(){
+        this.nombreUsuario = "Raul";
+        this.listaMensajes = null;
+    }
 
     public Usuario(DatosCrearUsuario datos) {
         this.nombreUsuario = datos.nombreUsuario();
