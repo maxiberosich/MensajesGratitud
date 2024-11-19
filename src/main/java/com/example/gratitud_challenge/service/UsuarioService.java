@@ -34,9 +34,8 @@ public class UsuarioService {
         return datosCrearUsuario;
     }
 
-    public DatosPublicoUsuario buscarUsuarioPorNombre(String nombre){
-        Usuario usuario = usuarioRepository.findByNombreUsuario(nombre).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        return modelMapper.convertirADatosUsuario(usuario);
+    public Usuario buscarUsuarioPorNombre(String nombre){
+        return usuarioRepository.findByNombreUsuario(nombre).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 
     public Optional<Usuario> findById(Long idUsuario) {
