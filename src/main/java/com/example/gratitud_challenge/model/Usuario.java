@@ -22,12 +22,10 @@ public class Usuario implements UserDetails {
     private String password;
     private String email;
 
-    @OneToMany
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Mensaje> listaMensajes;
 
     public Usuario(){
-        this.nombreUsuario = "Raul";
-        this.listaMensajes = null;
     }
 
     public Usuario(DatosCrearUsuario datos) {

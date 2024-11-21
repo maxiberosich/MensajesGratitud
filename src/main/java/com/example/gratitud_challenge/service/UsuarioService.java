@@ -2,6 +2,7 @@ package com.example.gratitud_challenge.service;
 
 import com.example.gratitud_challenge.dto.usuario.DatosCrearUsuario;
 import com.example.gratitud_challenge.dto.usuario.DatosPublicoUsuario;
+import com.example.gratitud_challenge.dto.usuario.DatosUsuario;
 import com.example.gratitud_challenge.exception.ValidacionDeIntegridad;
 import com.example.gratitud_challenge.model.Usuario;
 import com.example.gratitud_challenge.repository.UsuarioRepository;
@@ -11,7 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
@@ -34,16 +36,44 @@ public class UsuarioService {
         return datosCrearUsuario;
     }
 
-    public Usuario buscarUsuarioPorNombre(String nombre){
-        return usuarioRepository.findByNombreUsuario(nombre).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    public List<DatosPublicoUsuario> obtenerTodosLosUsuarios(){
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        return usuarios.stream()
+                .map(modelMapper::convertirADatosPublicoUsuario)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Usuario> findById(Long idUsuario) {
-        return usuarioRepository.findById(idUsuario);
+    public DatosUsuario buscarUsuarioPorNombre(String nombre){
+        Usuario usuario =  usuarioRepository.findByNombreUsuario(nombre)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        return modelMapper.convertirADatosUsuario(usuario);
+    }
+
+    public DatosUsuario buscarUsuarioPorID(Long idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        return modelMapper.convertirADatosUsuario(usuario);
     }
 
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    public DatosUsuario actualizarUsuario(Long idUsuario, DatosCrearUsuario datosUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        usuario.setNombreUsuario(datosUsuario.nombreUsuario());
+        usuario.setEmail(datosUsuario.email());
+        usuario.setPassword(datosUsuario.password());
+
+        usuario = usuarioRepository.save(usuario);
+        return modelMapper.convertirADatosUsuario(usuario);
+    }
+
+    public void eliminarUsuario(Long idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException(("Usuario no encontrado")));
+        usuarioRepository.delete(usuario);
+    }
 }

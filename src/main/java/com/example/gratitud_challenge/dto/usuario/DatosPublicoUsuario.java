@@ -5,6 +5,7 @@ import com.example.gratitud_challenge.dto.mensaje.DatosMensaje;
 import java.util.List;
 
 public record DatosPublicoUsuario(
+        Long idUsuario,
         String nombreUsuario
 ) {
 }

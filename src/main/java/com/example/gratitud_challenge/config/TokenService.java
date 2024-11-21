@@ -25,7 +25,7 @@ public class TokenService {
             return JWT.create()
                     .withIssuer("gratitud-challenge")
                     .withSubject(usuario.getNombreUsuario())
-                    .withClaim("id",usuario.getIdUsuario())
+                    .withClaim("id", usuario.getIdUsuario())
                     .withExpiresAt( generarFechaExpiracion())
                     .sign(algorithm);
         } catch (JWTCreationException exception){
