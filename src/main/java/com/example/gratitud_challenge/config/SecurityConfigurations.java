@@ -30,6 +30,7 @@ public class SecurityConfigurations {
                 .requestMatchers(HttpMethod.POST, "/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/usuario/registrar").permitAll()
                 .requestMatchers(HttpMethod.GET, "/mensaje/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/mensaje/{id}/puntuar").authenticated()
                 .anyRequest()
                 .authenticated()
                 .and()

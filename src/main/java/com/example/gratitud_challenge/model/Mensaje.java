@@ -17,6 +17,9 @@ public class Mensaje {
     private Double puntuacion;
     private LocalDateTime fechaCreacion;
 
+    private Integer numeroPuntuacion;
+    private Double totalPuntuacion;
+
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;

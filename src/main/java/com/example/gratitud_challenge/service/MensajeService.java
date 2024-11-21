@@ -3,11 +3,13 @@ package com.example.gratitud_challenge.service;
 import com.example.gratitud_challenge.dto.mensaje.DatosCrearMensaje;
 import com.example.gratitud_challenge.dto.mensaje.DatosMensaje;
 import com.example.gratitud_challenge.dto.usuario.DatosUsuario;
+import com.example.gratitud_challenge.exception.ValidacionDeIntegridad;
 import com.example.gratitud_challenge.model.Mensaje;
 import com.example.gratitud_challenge.model.Usuario;
 import com.example.gratitud_challenge.repository.MensajeRepository;
 import com.example.gratitud_challenge.util.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -71,5 +73,30 @@ public class MensajeService {
                 .collect(Collectors.toList());
     }
 
+    public DatosMensaje puntuarMensaje(Long id, Double puntuacion) {
+        Mensaje mensaje = mensajeRepository.findById(id)
+                .orElseThrow(() -> new ValidacionDeIntegridad("Mensaje no encontrado"));
+
+        mensaje.setNumeroPuntuacion(mensaje.getNumeroPuntuacion() + 1);
+        mensaje.setTotalPuntuacion(mensaje.getTotalPuntuacion() + puntuacion);
+
+        Double promedio = mensaje.getTotalPuntuacion() / mensaje.getNumeroPuntuacion();
+        mensaje.setPuntuacion(promedio);
+
+        mensajeRepository.save(mensaje);
+        return new DatosMensaje(mensaje.getIdMensaje(), mensaje.getContenido(), mensaje.getPuntuacion(), mensaje.getFechaCreacion(), mensaje.getUsuario().getNombreUsuario());
+    }
+
+    public List<DatosMensaje> obtenerMensajesPorFecha() {
+        return mensajeRepository.findAllByOrderByFechaCreacionDesc().stream()
+                .map(mensaje -> new DatosMensaje(mensaje.getIdMensaje(), mensaje.getContenido(), mensaje.getPuntuacion(), mensaje.getFechaCreacion(), mensaje.getUsuario().getNombreUsuario()))
+                .collect(Collectors.toList());
+    }
+
+    public List<DatosMensaje> obtenerMensajesPorPuntuacion() {
+        return mensajeRepository.findAllByOrderByPuntuacionDesc().stream()
+                .map(mensaje -> new DatosMensaje(mensaje.getIdMensaje(), mensaje.getContenido(), mensaje.getPuntuacion(), mensaje.getFechaCreacion(), mensaje.getUsuario().getNombreUsuario()))
+                .collect(Collectors.toList());
+    }
 
 }

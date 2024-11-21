@@ -2,9 +2,11 @@ package com.example.gratitud_challenge.controller;
 
 import com.example.gratitud_challenge.dto.mensaje.DatosCrearMensaje;
 import com.example.gratitud_challenge.dto.mensaje.DatosMensaje;
+import com.example.gratitud_challenge.model.Mensaje;
 import com.example.gratitud_challenge.service.MensajeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +44,22 @@ public class MensajeController {
     @GetMapping("/usuario")
     public List<DatosMensaje> obtenerMensajesPorNombreUsuario(@RequestParam String nombreUsuario) {
         return mensajeService.obtenerMensajesPorNombreUsuario(nombreUsuario);
+    }
+
+    @PostMapping("/{id}/puntuar")
+    public ResponseEntity<DatosMensaje> puntuarMensaje(@PathVariable Long id, @RequestParam Double puntuacion) {
+        DatosMensaje mensajePuntuado = mensajeService.puntuarMensaje(id, puntuacion);
+        return ResponseEntity.ok(mensajePuntuado);
+    }
+
+    @GetMapping("/orden/fecha")
+    public List<DatosMensaje> obtenerMensajesPorFecha() {
+        return mensajeService.obtenerMensajesPorFecha();
+    }
+
+    @GetMapping("/orden/puntuacion")
+    public List<DatosMensaje> obtenerMensajesPorPuntuacion() {
+        return mensajeService.obtenerMensajesPorPuntuacion();
     }
 
 
